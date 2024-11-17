@@ -29,7 +29,7 @@ public class Job {
         this.objectMapper = objectMapper;
     }
 
-    @Scheduled(cron = "0/4 * * * * ?")
+    @Scheduled(cron = "0/2 * * * * ?")
     public void cronJob() throws Exception {
         if (countSuccess > 5) {
             return;
@@ -43,6 +43,7 @@ public class Job {
         if (Objects.nonNull(getListResponse.getData())) {
             log.info("Get list success: {}", getListResponse.getData().size());
             getListResponse.getData().forEach(order -> {
+                log.info("Order with exireDate and word: {} {}", order.getRequire().getExpiresDate(), order.getRequire().getWords());
                if (order.getRequire().getExpiresDate().isAfter(minExpireDate) && order.getRequire().getWords() == 1000) {
                    log.info("Order accept with exireDate and word: {} {}", order.getRequire().getExpiresDate(), order.getRequire().getWords());
                    ResponseEntity<String> response = restTemplate.exchange(PUT_BASE_URL + order.get_id(), HttpMethod.PUT, requestEntity, String.class);
